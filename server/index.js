@@ -1,8 +1,9 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config()
 const uri =
-  "mongodb+srv://devmistry1501:devmistry1501@cluster0.q361c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  process.env.mongodburi;
 const port = 5000;
 
 const app = express();

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Box, Modal } from "@mui/material";
-import Button from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -65,6 +64,7 @@ function Editchild({ dob, setdob }) {
 }
 
 const Editprofile = ({ user, loggedinuser }) => {
+  const port = process.env.PORT || "localhost:5000";
   const [name, setname] = useState("");
   const [bio, setbio] = useState("");
   const [location, setlocation] = useState("");
@@ -79,7 +79,7 @@ const Editprofile = ({ user, loggedinuser }) => {
       website,
       dob,
     };
-    fetch(`http://localhost:5000/userupdate/${user?.email}`, {
+    fetch(`http://${port}/userupdate/${user?.email}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",

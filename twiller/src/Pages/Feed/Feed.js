@@ -3,16 +3,18 @@ import "./Feed.css";
 import Posts from "./Posts/Posts";
 import Tweetbox from "./Tweetbox/Tweetbox";
 const Feed = () => {
+
   const [post, setpost] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/post")
+    const port = process.env.PORT || "localhost:5000";
+    fetch(`http://${port}/post`)
       .then((res) => res.json())
       .then((data) => {
         setpost(data);
       })
-      
-  },[post]);
+
+  }, [post]);
   // console.log(post)
   // const data = [
   //   {

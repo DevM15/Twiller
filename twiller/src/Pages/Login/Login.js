@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState } from "react";
 import twitterimg from "../../image/twitter.jpeg";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GoogleButton from "react-google-button";
@@ -10,12 +10,12 @@ const Login = () => {
   const [password, setpassword] = useState("");
   const [error, seterror] = useState("");
   const navigate = useNavigate();
-  const { googleSignIn ,logIn} = useUserAuth();
+  const { googleSignIn, logIn } = useUserAuth();
   const handlesubmit = async (e) => {
     e.preventDefault();
     seterror("");
     try {
-      await logIn(email,password)
+      await logIn(email, password)
       navigate("/");
     } catch (error) {
       seterror(error.message);
@@ -63,7 +63,7 @@ const Login = () => {
             </form>
             <hr />
             <div>
-              <GoogleButton className="g-btn" type="light" onClick={hanglegooglesignin}/>
+              <GoogleButton className="g-btn" type="light" onClick={hanglegooglesignin} />
             </div>
           </div>
           <div>

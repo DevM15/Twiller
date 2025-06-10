@@ -9,28 +9,28 @@ import {
 } from "firebase/auth";
 import { auth } from "./firbase";
 
- const userAuthContext = createContext();
+const userAuthContext = createContext();
 
-export function UserAuthContextProvider( props ) {
+export function UserAuthContextProvider(props) {
     const [user, setUser] = useState({});
 
     function logIn(email, password) {
         return signInWithEmailAndPassword(auth, email, password);
     }
     function signUp(email, password) {
-        
-         createUserWithEmailAndPassword(auth, email, password)
-         .then((userCredential) => {
-            // Signed up 
-            const user = userCredential.user;
-            // ...
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode,errorMessage)
-            // ..
-          });
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed up 
+                setUser(userCredential.user)
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage)
+                // ..
+            });
     }
     function logOut() {
         return signOut(auth);

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import twitterimg from "../../image/twitter.jpeg";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -7,6 +7,7 @@ import { useUserAuth } from "../../context/UserAuthContext";
 import "./login.css";
 
 const Signup = () => {
+  const port = process.env.PORT || "localhost:5000";
   const [username, setusername] = useState("");
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
@@ -26,7 +27,7 @@ const Signup = () => {
         name: name,
         email: email,
       };
-      fetch("http://localhost:5000/register", {
+      fetch(`http://${port}/register`, {
         method: "POST",
         headers: {
           "content-type": "application/json",

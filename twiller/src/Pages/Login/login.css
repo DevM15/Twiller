@@ -2,8 +2,7 @@
     display: flex;
     flex: 1;
     width: 100vw;
-
-
+    height: 100vh;
 }
 
 .form-container {
@@ -11,16 +10,26 @@
     padding: 50px;
     margin: 10px;
     /* margin-left: -50px; */
-    align-content: center;
-
-
-
+    align-items: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .form-box {
-    justify-content: left;
-    align-items: inherit;
-    grid-row: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .Twitter-img {
@@ -49,18 +58,17 @@ h3 {
 
 .image-container {
     flex: 2;
-    margin-left: -100px;
-
-
+    margin-left: 20px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    display: flex;
 }
 
 .image {
     max-width: 100%;
-    height: 100%;
+    height: 90%;
     /* margin-left: -50px; */
-
-
-
 }
 
 input {
@@ -100,13 +108,14 @@ input {
 
 .btn-login {
     padding: 7px;
+    width: 100%;
+    text-align: center;
 }
 
 .btn {
     background-color: rgb(92, 199, 241);
     width: 75%;
-    margin-right: 20px;
-    padding: 14px;
+    padding: 12px;
     border-radius: 8px;
     font-size: 17px;
     border: none;
@@ -146,38 +155,61 @@ input {
 
 }
 
-@media screen and (max-width:688px) {
+@media screen and (min-width:1024px) and (max-width:1280px) {
+    .heading {
+        font-size: 38px;
+    }
+
+    .image {
+        height: 80%;
+        aspect-ratio: 16/1;
+    }
+
+}
+
+
+@media screen and (min-width:768px) and (max-width:1023px) {
+    .heading {
+        font-size: 30px;
+    }
+
+    .image {
+        height: 70%;
+        aspect-ratio: 16/1;
+    }
+
+    .form-container {
+        padding: 40px;
+    }
+}
+
+
+@media screen and (min-width:320px) and (max-width:767px) {
     .login-container {
         order: 2;
         display: flex;
         flex-direction: column;
-        font-size: 20px;
+        font-size: 15px;
+        justify-content: space-between;
+    }
 
+    .heading {
+        font-size: 2.5rem;
     }
 
     .form-container {
-        padding: 10px;
+        margin: 0;
+        padding: 0px;
+        padding-top: 50px;
     }
 
+    form {
+        max-width: 70%;
+        margin: auto;
+        width: 100%;
+    }
 
     .image-container {
-        width: 100%;
-        vertical-align: text-bottom;
-        display: flex;
-        flex-direction: column-reverse;
-        order: 1;
-        max-width: 100%;
-        width: 100%;
-
-
-    }
-
-
-    .image {
-        order: 2;
-        width: 100%;
-        height: 100%;
-        margin-left: 100px;
-
+        display: none;
     }
 }

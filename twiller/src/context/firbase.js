@@ -1,9 +1,10 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+require('dotenv').config()
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDIA7mf38QbF4VjY6k_0WxRzTR6tCNzKZo",
+  apiKey: process.env.firebaseapikey,
   authDomain: "twitter-5a751.firebaseapp.com",
   projectId: "twitter-5a751",
   storageBucket: "twitter-5a751.firebasestorage.app",
