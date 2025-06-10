@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: process.env.firebaseapikey,
+  apiKey: "AIzaSyDIA7mf38QbF4VjY6k_0WxRzTR6tCNzKZo",
   authDomain: "twitter-5a751.firebaseapp.com",
   projectId: "twitter-5a751",
   storageBucket: "twitter-5a751.firebasestorage.app",
