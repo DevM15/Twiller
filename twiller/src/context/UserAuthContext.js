@@ -6,6 +6,7 @@ import {
     signOut,
     GoogleAuthProvider,
     signInWithPopup,
+    signInWithPhoneNumber,
 } from "firebase/auth";
 import { auth } from "./firbase";
 
@@ -18,7 +19,6 @@ export function UserAuthContextProvider(props) {
         return signInWithEmailAndPassword(auth, email, password);
     }
     function signUp(email, password) {
-
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed up 
@@ -39,6 +39,16 @@ export function UserAuthContextProvider(props) {
         const googleAuthProvider = new GoogleAuthProvider();
         return signInWithPopup(auth, googleAuthProvider);
     }
+    async function phoneSignIn(phoneNumber, appVerifier) {
+        try {
+            const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+            window.confirmationResult = confirmationResult;
+            return confirmationResult;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -53,7 +63,7 @@ export function UserAuthContextProvider(props) {
 
     return (
         <userAuthContext.Provider
-            value={{ user, logIn, signUp, logOut, googleSignIn }}
+            value={{ user, logIn, signUp, logOut, googleSignIn, phoneSignIn }}
         >
             {props.children}
         </userAuthContext.Provider>

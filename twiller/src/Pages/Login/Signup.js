@@ -4,7 +4,10 @@ import twitterimg from "../../image/twitter.jpeg";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GoogleButton from "react-google-button";
 import { useUserAuth } from "../../context/UserAuthContext";
+import { RecaptchaVerifier } from 'firebase/auth'
+import { auth } from "../../context/firbase";
 import "./login.css";
+
 
 const Signup = () => {
   const port = process.env.PORT || "localhost:5000";
@@ -13,9 +16,23 @@ const Signup = () => {
   const [email, setemail] = useState("");
   const [error, seterror] = useState("");
   const [password, setpassword] = useState("");
-  const { signUp } = useUserAuth();
-  const { googleSignIn } = useUserAuth();
+  const [number, setNumber] = useState("")
+  const { signUp, googleSignIn, phoneSignIn } = useUserAuth();
+  const [otp, setOtp] = useState("");
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const navigate = useNavigate();
+
+  const setupRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response) => {
+          // reCAPTCHA solved
+        }
+      });
+    }
+    return window.recaptchaVerifier;
+  };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
@@ -50,11 +67,60 @@ const Signup = () => {
     e.preventDefault();
     try {
       await googleSignIn();
+      fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
       navigate("/");
     } catch (error) {
       console.log(error.message);
     }
   };
+  const handletel = async (e) => {
+    e.preventDefault();
+    seterror("");
+    try {
+      const appVerifier = setupRecaptcha();
+      const result = await phoneSignIn(number, appVerifier);
+      setConfirmationResult(result);
+      window.alert("OTP sent!");
+    } catch (error) {
+      seterror(error.message);
+      window.alert(error.message);
+    }
+  };
+  const onSubmitOTP = async (e) => {
+    e.preventDefault();
+    seterror("");
+    try {
+      if (!window.confirmationResult) {
+        seterror("No confirmation result. Please request OTP again.");
+        return;
+      }
+      await window.confirmationResult.confirm(otp);
+      const user = {
+        username: username,
+        name: name,
+        email: email,
+        tel: number
+      };
+      fetch(`http://${port}/register`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(user),
+      })
+      window.alert("Phone number verified and user signed in!");
+      navigate("/");
+    } catch (error) {
+      seterror(error.message);
+      window.alert(error.message);
+    }
+  };
+
   return (
     <>
       <div className="login-container">
@@ -63,11 +129,11 @@ const Signup = () => {
         </div>
 
         <div className="form-container">
-          <div className="">
+          <div className="form-box">
             <TwitterIcon className="Twittericon" style={{ color: "skyblue" }} />
-            <h2 className="heading">Happening now</h2>
+            <h2 className="heading" style={{ margin: "20px" }}>Happening now</h2>
             <div class="d-flex align-items-sm-center">
-              <h3 className="heading1"> Join twiller today</h3>
+              <h3 className="heading1" style={{ margin: "0px" }}> Join twiller today</h3>
             </div>
             {error && <p className="errorMessage">{error}</p>}
             <form onSubmit={handlesubmit}>
@@ -101,6 +167,23 @@ const Signup = () => {
                 </button>
               </div>
             </form>
+            <hr />
+            <form onSubmit={handletel}>
+              <input type="tel"
+                className="number"
+                placeholder="number"
+                onChange={(e) => setNumber(e.target.value)} />
+              <button type="submit" className="tel-btn">
+                Send
+              </button>
+            </form>
+            <div id="recaptcha-container"></div> {/* Add this for reCAPTCHA */}
+            <h2>Enter OTP</h2>
+            <form onSubmit={onSubmitOTP}>
+              <input className='form-control mb-3' type="number" name="otp" placeholder="OTP Number" required onChange={(e) => setOtp(e.target.value)} />
+              <button className='btn btn-primary' type="submit">Submit</button>
+            </form>
+
             <hr />
             <div className="google-button">
               <GoogleButton

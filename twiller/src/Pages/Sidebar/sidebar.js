@@ -25,7 +25,7 @@ import useLoggedinuser from "../../hooks/useLoggedinuser"
 const Sidebar = ({ handlelogout, user }) => {
   const [anchorE1, setanchorE1] = useState(null);
   const openmenu = Boolean(anchorE1);
-  const [ loggedinuser] = useLoggedinuser();
+  const [loggedinuser] = useLoggedinuser();
   const navigate = useNavigate();
   const handleclick = (e) => {
     setanchorE1(e.currentTarget);
@@ -36,31 +36,42 @@ const Sidebar = ({ handlelogout, user }) => {
   };
   const result = user?.email?.split("@")[0];
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="sidebar">
-      <TwitterIcon className="sidebar__twitterIcon" />
-      <Customlink to="/home/feed">
+    <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
+      <div className="r-btn" >
+        <button className="toggle-button" onClick={toggleSidebar}>
+          {isOpen ? <p>&#10006;</p> : "Menu"}
+        </button>
+      </div>
+      < TwitterIcon className="sidebar__twitterIcon" />
+      <Customlink to="/home/feed" onClick={toggleSidebar}>
         <Sidebaroption active Icon={HomeIcon} text="Home" />
       </Customlink>
-      <Customlink to="/home/explore">
+      <Customlink to="/home/explore" onClick={toggleSidebar}>
         <Sidebaroption Icon={SearchIcon} text="Explore" />
       </Customlink>
-      <Customlink to="/home/notification">
+      <Customlink to="/home/notification" onClick={toggleSidebar}>
         <Sidebaroption Icon={NotificationsNoneIcon} text="Notifications" />
       </Customlink>
-      <Customlink to="/home/messages">
+      <Customlink to="/home/messages" onClick={toggleSidebar}>
         <Sidebaroption Icon={MailOutlineIcon} text="Messages" />
       </Customlink>
-      <Customlink to="/home/bookmarks">
+      <Customlink to="/home/bookmarks" onClick={toggleSidebar}>
         <Sidebaroption Icon={BookmarkBorderIcon} text="Bookmarks" />
       </Customlink>
-      <Customlink to="/home/lists">
+      <Customlink to="/home/lists" onClick={toggleSidebar}>
         <Sidebaroption Icon={ListAltIcon} text="Lists" />
       </Customlink>
-      <Customlink to="/home/profile">
+      <Customlink to="/home/profile" onClick={toggleSidebar}>
         <Sidebaroption Icon={PermIdentityIcon} text="Profile" />
       </Customlink>
-      <Customlink to="/home/more">
+      <Customlink to="/home/more" onClick={toggleSidebar}>
         <Sidebaroption Icon={MoreIcon} text="More" />
       </Customlink>
       <Button variant="outlined" className="sidebar__tweet" fullWidth>
@@ -109,7 +120,7 @@ const Sidebar = ({ handlelogout, user }) => {
                 loggedinuser[0]?.profileImage
                   ? loggedinuser[0]?.profileImage
                   : user && user.photoURL
-                  // : "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png"
+                // : "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png"
               }
             />
             <div className="user__info subUser__info">

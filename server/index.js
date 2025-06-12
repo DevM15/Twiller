@@ -1,5 +1,6 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express");
+const router = express.Router();
 const cors = require("cors");
 require('dotenv').config()
 const uri =
@@ -12,6 +13,8 @@ app.use(express.json());
 
 const client = new MongoClient(uri);
 
+
+
 async function run() {
   try {
     await client.connect();
@@ -22,6 +25,11 @@ async function run() {
       // console.log(user)
       const result = await usercollection.insertOne(user);
       res.send(result);
+    });
+    app.post('/login', async (req, res) => {
+      const forwarded = req.headers['x-forwarded-for'];
+      const ip = forwarded ? forwarded.split(',')[0].trim() : req.socket.remoteAddress;
+      // console.log("User IP:", ip);
     });
     app.get("/loggedinuser", async (req, res) => {
       const email = req.query.email;
