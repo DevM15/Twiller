@@ -10,9 +10,11 @@ import Message from "./Pages/Messages/Message";
 import ProtectedRoute from "./Pages/ProtectedRoute";
 import Lists from "./Pages/Lists/Lists";
 import Profile from "./Pages/Profile/Profile";
-import More from "./Pages/more/More";
+import History from "./Pages/history/History";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 import Bookmark from "./Pages/Bookmark/Bookmark";
+import AuthforChrome from "./Pages/AuthforChrome/AuthforChrome"
+
 function App() {
   return (
     <div className="app">
@@ -40,6 +42,7 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/AuthforChrome" element={<AuthforChrome />} />
           <Route path="/home" element={<Home />}>
             <Route path="feed" element={<Feed />} />
             <Route path="explore" element={<Explore />} />
@@ -48,7 +51,7 @@ function App() {
             <Route path="lists" element={<Lists />} />
             <Route path="bookmarks" element={<Bookmark />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="more" element={<More />} />
+            <Route path="history" element={<History />} />
           </Route>
         </Routes>
       </UserAuthContextProvider>

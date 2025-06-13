@@ -7,16 +7,19 @@ import "./login.css";
 import { useUserAuth } from "../../context/UserAuthContext";
 import { auth } from "../../context/firbase";
 import { RecaptchaVerifier } from 'firebase/auth'
-
+import { UAParser } from "ua-parser-js";
 const Login = () => {
+
   const [email, seteamil] = useState("");
   const [password, setpassword] = useState("");
   const [error, seterror] = useState("");
   const [number, setNumber] = useState("")
   const [otp, setOtp] = useState("");
   const [confirmationResult, setConfirmationResult] = useState(null);
+
   const navigate = useNavigate();
   const { googleSignIn, logIn, phoneSignIn } = useUserAuth();
+
   const handlesubmit = async (e) => {
     e.preventDefault();
     seterror("");
@@ -31,16 +34,41 @@ const Login = () => {
   const hanglegooglesignin = async (e) => {
     e.preventDefault();
     try {
-      await googleSignIn();
-      fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+      const user = await googleSignIn();
+
+      const parser = new UAParser();
+      const uaResult = parser.getResult();
+
+      if (uaResult.browser.name === "Chrome") {
+        const email = user.email
+        navigate("/Authforchrome")
+      }
+      else {
+        const response = await fetch("http://localhost:5000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: user.email,
+            location: {
+              browser: uaResult.browser,
+              os: uaResult.os,
+              device: uaResult.device
+            }
+          })
+        });
+        const data = await response.json();
+        if (data && !data.error) {
+          navigate("/");
+        } else {
+          seterror(data.error || "Google login failed.");
+          window.alert(data.error || "Google login failed.");
         }
-      })
-      navigate("/");
+      }
     } catch (error) {
-      console.log(error.message);
+      seterror(error.message);
+      window.alert(error.message);
     }
   };
   const setupRecaptcha = () => {
@@ -83,31 +111,6 @@ const Login = () => {
       window.alert(error.message);
     }
   };
-
-  const UAParser = require('ua-parser-js');
-
-  // Example user-agent string
-  const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
-
-  // Initialize parser
-  const parser = new UAParser(userAgent);
-
-  // Parse the user-agent
-  const result = parser.getResult();
-
-  console.log("Browser Name:", result.browser.name);
-  console.log("Operating System:", result.os.name); // Windows
-  console.log("Device Type:", result.device.type || "Desktop"); // Desktop
-
-  // Example output:
-  // {
-  //   ua: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-  //   browser: { name: "Chrome", version: "91.0.4472.124" },
-  //   engine: { name: "WebKit", version: "537.36" },
-  //   os: { name: "Windows", version: "10" },
-  //   device: { vendor: undefined, model: undefined, type: undefined },
-  //   cpu: { architecture: "amd64" }
-  // }
 
   return (
     <>

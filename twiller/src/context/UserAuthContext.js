@@ -6,6 +6,7 @@ import {
     signOut,
     GoogleAuthProvider,
     signInWithPopup,
+    signInWithRedirect,
     signInWithPhoneNumber,
 } from "firebase/auth";
 import { auth } from "./firbase";
@@ -37,7 +38,12 @@ export function UserAuthContextProvider(props) {
     }
     function googleSignIn() {
         const googleAuthProvider = new GoogleAuthProvider();
-        return signInWithPopup(auth, googleAuthProvider);
+        googleAuthProvider.addScope("email");
+        return signInWithPopup(auth, googleAuthProvider)
+            .then((result) => result.user)
+            .catch((error) => {
+                throw error;
+            });
     }
     async function phoneSignIn(phoneNumber, appVerifier) {
         try {
@@ -52,7 +58,7 @@ export function UserAuthContextProvider(props) {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-            console.log("Auth", currentuser);
+            // console.log("Auth", currentuser);
             setUser(currentuser);
         });
 

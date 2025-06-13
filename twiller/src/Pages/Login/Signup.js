@@ -7,7 +7,7 @@ import { useUserAuth } from "../../context/UserAuthContext";
 import { RecaptchaVerifier } from 'firebase/auth'
 import { auth } from "../../context/firbase";
 import "./login.css";
-
+import { UAParser } from "ua-parser-js";
 
 const Signup = () => {
   const port = process.env.PORT || "localhost:5000";
@@ -66,14 +66,33 @@ const Signup = () => {
   const hanglegooglesignin = async (e) => {
     e.preventDefault();
     try {
-      await googleSignIn();
-      fetch("http://localhost:5000/login", {
+      const result = await googleSignIn();
+
+      const parser = new UAParser();
+      const uaResult = parser.getResult();
+
+      const user = {
+        email: result.email,
+        location: {
+          browser: uaResult.browser,
+          os: uaResult.os,
+          device: uaResult.device
+        }
+      }
+      fetch(`http://${port}/register`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(user),
       })
-      navigate("/");
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.acknowledged) {
+            console.log(data);
+            navigate("/");
+          }
+        });
     } catch (error) {
       console.log(error.message);
     }

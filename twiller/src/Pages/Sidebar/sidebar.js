@@ -7,7 +7,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import MoreIcon from "@mui/icons-material/More";
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Divider from "@mui/material/Divider";
 import DoneIcon from "@mui/icons-material/Done";
@@ -71,8 +71,8 @@ const Sidebar = ({ handlelogout, user }) => {
       <Customlink to="/home/profile" onClick={toggleSidebar}>
         <Sidebaroption Icon={PermIdentityIcon} text="Profile" />
       </Customlink>
-      <Customlink to="/home/more" onClick={toggleSidebar}>
-        <Sidebaroption Icon={MoreIcon} text="More" />
+      <Customlink to="/home/history" onClick={toggleSidebar}>
+        <Sidebaroption Icon={AccessAlarmIcon} text="History" />
       </Customlink>
       <Button variant="outlined" className="sidebar__tweet" fullWidth>
         Tweet
