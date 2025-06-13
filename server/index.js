@@ -178,8 +178,6 @@ async function run() {
         console.error('Error sending OTP:', error);
         return res.status(500).json({ message: 'Failed to send OTP' });
       }
-      console.log(`Sending OTP to ${email}: ${otp}`); // Replace with actual email send
-      return res.json({ message: 'OTP sent to email', requireOTP: true });
 
     });
 
@@ -204,5 +202,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Twiller clone is workingon ${port}`);
+  console.log(`Twiller clone is working on ${port}`);
 });

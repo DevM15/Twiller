@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import twitterimg from "../../image/twitter.jpeg";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GoogleButton from "react-google-button";
@@ -16,6 +16,8 @@ const Login = () => {
   const [number, setNumber] = useState("")
   const [otp, setOtp] = useState("");
   const [confirmationResult, setConfirmationResult] = useState(null);
+
+  const port = process.env.PORT || "localhost:5000";
 
   const navigate = useNavigate();
   const { googleSignIn, logIn, phoneSignIn } = useUserAuth();
@@ -41,10 +43,17 @@ const Login = () => {
 
       if (uaResult.browser.name === "Chrome") {
         const email = user.email
-        navigate("/Authforchrome")
+        await fetch(`http://${port}/AuthforChrome`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email
+          }),
+        });
+        navigate("/Authforchrome", { state: { email } })
       }
       else {
-        const response = await fetch("http://localhost:5000/login", {
+        const response = await fetch(`http://${port}/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

@@ -10,10 +10,12 @@ const HistoryPage = () => {
 
   const result = user?.email;
 
+  const port = process.env.PORT || "localhost:5000";
+
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/history", {
+        const response = await axios.get(`http://${port}/history`, {
           params: { email: result }
         });
         setHistory(response.data.history.flat().reverse());

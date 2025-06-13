@@ -14,8 +14,35 @@ import History from "./Pages/history/History";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 import Bookmark from "./Pages/Bookmark/Bookmark";
 import AuthforChrome from "./Pages/AuthforChrome/AuthforChrome"
+import { useEffect, useState } from "react";
 
 function App() {
+  const [isAllowed, setIsAllowed] = useState(true);
+
+  useEffect(() => {
+    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      const now = new Date();
+      const hours = now.getHours();
+
+      const isWithinTime = hours >= 10 && hours < 13;
+
+      if (!isWithinTime) {
+        setIsAllowed(false);
+      }
+    }
+  }, []);
+
+  if (!isAllowed) {
+    return (
+      <div style={{ textAlign: 'center', marginTop: '100px' }}>
+        <h2>⏱️ Mobile access allowed only between 10 AM and 1 PM</h2>
+        <p>Please try again during the permitted hours.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <UserAuthContextProvider>

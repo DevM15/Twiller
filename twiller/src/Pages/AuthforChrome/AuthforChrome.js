@@ -1,91 +1,48 @@
-import { useNavigate, Link } from "react-router-dom";
-import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useLocation } from "react-router-dom";
 
 
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const port = process.env.PORT || "localhost:5000";
     const [otp, setOtp] = useState('');
-    const [showOtpField, setShowOtpField] = useState(false);
-
-    const getUserAgent = () => navigator.userAgent;
-    const isChrome = () => /Chrome/i.test(getUserAgent()) && !/Edg/i.test(getUserAgent());
-    const isEdge = () => /Edg/i.test(getUserAgent());
-    const isMobile = () => /Mobi|Android|iPhone/i.test(getUserAgent());
 
     const navigate = useNavigate();
 
-    const isWithinAllowedTime = () => {
-        const now = new Date();
-        const hour = now.getHours();
-        return hour >= 10 && hour < 13;
-    };
+    const location = useLocation();
+    const email = location.state?.email
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (showOtpField) {
-            const res = await fetch('http://localhost:5000/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, otp }),
-            });
-            const data = await res.json();
-            alert(data.message);
-            navigate("/")
-            return;
-        }
-
-        // First step: check device/browser/time
-        if (isMobile() && !isWithinAllowedTime()) {
-            alert('Mobile access allowed only from 10 AM to 1 PM');
-            return;
-        }
-
-        const userAgent = getUserAgent();
-
-        const res = await fetch('http://localhost:5000/AuthforChrome', {
+        const res = await fetch(`http://${port}/verify-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email,
-                userAgent,
-                isMobile: isMobile(),
-            }),
+            body: JSON.stringify({ email, otp }),
         });
-
         const data = await res.json();
-        if (data.requireOTP) {
-            setShowOtpField(true);
-        } else {
-            alert(data.message);
-        }
+        alert(data.message);
+        navigate("/")
+        return
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: 'auto' }}>
+        <div style={{ maxWidth: '400px', margin: 'auto', textAlign: "center" }}>
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <label>Email:</label><br />
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                /><br /><br />
+                <>
+                    <p>OTP sent to {email}</p>
+                    <label>OTP:</label><br />
+                    <input
+                        type="text"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        required
+                    /><br /><br />
+                </>
 
-                {showOtpField && (
-                    <>
-                        <label>OTP:</label><br />
-                        <input
-                            type="text"
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value)}
-                            required
-                        /><br /><br />
-                    </>
-                )}
 
-                <button type="submit">{showOtpField ? 'Verify OTP' : 'Login'}</button>
+                <button type="submit">Verify OTP</button>
             </form>
         </div>
     );
